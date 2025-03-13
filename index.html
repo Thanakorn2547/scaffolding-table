@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>รายการงาน</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 20px;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 20px;
+    }
+
+    th, td {
+      border: 1px solid #ddd;
+      padding: 8px;
+      text-align: center;
+    }
+
+    th {
+      background-color: #f2f2f2;
+    }
+
+    input[type="number"], input[type="date"], input[type="text"] {
+      width: 100%;
+      padding: 6px;
+      margin: 2px 0;
+      box-sizing: border-box;
+      text-align: right;
+    }
+
+    input[type="text"] {
+      text-align: left;
+    }
+
+    .total-row {
+      font-weight: bold;
+      background-color: #f9f9f9;
+    }
+
+    .total-cell {
+      text-align: left;
+    }
+
+    button {
+      padding: 10px 15px;
+      margin-top: 10px;
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #45a049;
+    }
+  </style>
+</head>
+<body>
+
+  <h2>ตารางคำนวณ Debit และ Credit</h2>
+
+  <table id="transactionTable">
+    <thead>
+      <tr>
+        <th>วัน/เดือน/ปี</th>
+        <th>รายการ</th>
+        <th>Debit</th>
+        <th>Credit</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><input type="date" name="date[]"></td>
+        <td><input type="text" name="description[]" placeholder="กรอกรายการ" ></td>
+        <td><input type="number" class="debit" oninput="calculateTotal()"></td>
+        <td><input type="number" class="credit" oninput="calculateTotal()"></td>
+      </tr>
+    </tbody>
+  </table>
+
+  <button onclick="addRow()">เพิ่มแถว</button>
+
+  <table>
+    <tfoot>
+      <tr class="total-row">
+        <td class="total-cell">ยอดรวม</td>
+        <td></td>
+        <td id="totalDebit">0</td>
+        <td id="totalCredit">0</td>
+      </tr>
+    </tfoot>
+  </table>
+
+  <script>
+    function calculateTotal() {
+      let totalDebit = 0;
+      let totalCredit = 0;
+      
+      // Get all debit and credit inputs
+      const debitInputs = document.querySelectorAll('.debit');
+      const creditInputs = document.querySelectorAll('.credit');
+
+      debitInputs.forEach(input => {
+        totalDebit += parseFloat(input.value) || 0;
+      });
+
+      creditInputs.forEach(input => {
+        totalCredit += parseFloat(input.value) || 0;
+      });
+
+      // Update totals in the footer
+      document.getElementById('totalDebit').textContent = totalDebit.toFixed(2);
+      document.getElementById('totalCredit').textContent = totalCredit.toFixed(2);
+    }
+
+    function addRow() {
+      const tableBody = document.querySelector('#transactionTable tbody');
+      const newRow = document.createElement('tr');
+
+      newRow.innerHTML = `
+        <td><input type="date" name="date[]"></td>
+        <td><input type="text" name="description[]" placeholder="กรอกรายการ"></td>
+        <td><input type="number" class="debit" oninput="calculateTotal()"></td>
+        <td><input type="number" class="credit" oninput="calculateTotal()"></td>
+      `;
+
+      tableBody.appendChild(newRow);
+    }
+  </script>
+
+</body>
+</html>
